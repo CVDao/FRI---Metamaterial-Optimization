@@ -1,5 +1,5 @@
 from deap import base, creator, tools, algorithms
-import numpy
+import numpy as np
 from pprint import pprint 
 
 #200mm x 150mm
@@ -10,18 +10,15 @@ width = 150/voxSize   #Calculates the size of the Y dimension of the array.
 # a test comment
 popSize = 20
 
-		
-def main():
-	creator.create("FMax", base.Fitness, weights = (1.0,) )
-	creator.create("Individual", list, fitness = creator.FMax)
-	toolbox = base.Toolbox()
-	toolbox.register("genIndividual", genInd, creator.Individual)
-	pprint(genInd())
-
 def genInd():
 	fullHolder = []
-	for i in range(len(length)):
-		fullHolder.append([])
-		for i in range(len(width)):
-			fullHolder[i].append([1])
+	for i in range(0, length):
+		for j in range(0, width):
+			fullHolder.append(np.random.rand(0,1))
 	return fullHolder
+
+creator.create("FMax", base.Fitness, weights = (1.0,) )
+creator.create("Individual", list, fitness = creator.FMax)
+toolbox = base.Toolbox()
+toolbox.register("genIndividual", genInd, creator.Individual)
+print(genInd())
