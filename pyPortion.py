@@ -12,13 +12,27 @@ popSize = 20
 
 def genInd():
 	fullHolder = []
-	for i in range(0, length):
-		for j in range(0, width):
-			fullHolder.append(np.random.rand(0,1))
+	for i in range(0, width): #for ever row
+		fullHolder.append(0) #add 2 0's at the start of the col
+		fullHolder.append(0)
+		for j in range(0, length): # add actual randomized bits
+			fullHolder.append(np.random.randint(0,2))
+		fullHolder.append(0) #add 2 0's at the end 
+		fullHolder.append(0)
+	teethY = width/2
+	fullHolder[teethY*length] = 1
 	return fullHolder
+
+def fitnessEval():
+	return 0
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
 creator.create("Individual", list, fitness = creator.FMax)
 toolbox = base.Toolbox()
 toolbox.register("genIndividual", genInd, creator.Individual)
+toolbox.register("genPop", tools.initRepeat, list, toolbox.genIndividual)
+toolbox.register("evaluate", fitnessEval)
+toolbox.register("mate", tools.cxTwoPoint)
+toolbox.register("mutate", tools.mutFlipBit)
+toolbox.register("select", tools.selTournament, tournsize = 200/voxSize)
 print(genInd())
