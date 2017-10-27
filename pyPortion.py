@@ -20,8 +20,12 @@ def genInd():
 		fullHolder.append(0) #add 2 0's at the end 
 		fullHolder.append(0)
 	teethY = width/2
-	fullHolder[teethY*length] = 1
+	fullHolder[(teethY+1)*length] = 1
+	fullHolder[(teethY-1)*length] = 1
 	return fullHolder
+
+def printInidividual():
+	
 
 def fitnessEval():
 	return 0
@@ -34,5 +38,5 @@ toolbox.register("genPop", tools.initRepeat, list, toolbox.genIndividual)
 toolbox.register("evaluate", fitnessEval)
 toolbox.register("mate", tools.cxTwoPoint)
 toolbox.register("mutate", tools.mutFlipBit)
-toolbox.register("select", tools.selTournament, tournsize = 200/voxSize)
+toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 print(genInd())
