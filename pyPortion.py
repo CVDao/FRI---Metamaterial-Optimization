@@ -10,6 +10,7 @@ width = 150/voxSize   #Calculates the size of the Y dimension of the array.
 # a test comment
 popSize = 20
 
+#Generating the individual seems to be working correctly for now.
 def genInd():
 	fullHolder = []
 	for i in range(0, width): #for ever row
@@ -24,10 +25,18 @@ def genInd():
 	fullHolder[(teethY-1)*length] = 1
 	return fullHolder
 
-def printInidividual():
-	
+def printIndividual(ind): #ind is meant to be the individual, not quite sure if this is right so may need tweaking
+	F = open("transFile.txt", w)
+	for i in range(0,width):
+		myString = ''
+		for j in range(0, length):
+			myString += ind[i][j]
+		F.write(myString)
+	file.close()
 
-def fitnessEval():
+#run printIndividual, then call the other guys code, then eval fitness
+def fitnessEval(ind):
+	printIndividual(ind)
 	return 0
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
@@ -39,4 +48,6 @@ toolbox.register("evaluate", fitnessEval)
 toolbox.register("mate", tools.cxTwoPoint)
 toolbox.register("mutate", tools.mutFlipBit)
 toolbox.register("select", tools.selTournament, tournsize = popSize/5)
+
+finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 200)
 print(genInd())
