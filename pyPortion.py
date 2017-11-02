@@ -92,7 +92,14 @@ def omutFlipBit(individual, indpb):
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
 	printIndividual(ind)
-	subprocess.call
+	print("fitness eval ran")
+	subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True);
+	F = open("output.txt", "w+")
+	F.split(",")
+
+	#valOne = 
+	#valTwo = 
+	#
 	return 0,
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
@@ -105,7 +112,7 @@ toolbox.register("mate", ocxTwoPoint)
 toolbox.register("mutate", omutFlipBit, indpb = .05)
 toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 
-#finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 100)
+finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 100)
 printIndividual([genInd()])
 nonFormatPrint([genInd()])
 #printIndividual(testString)
