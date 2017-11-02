@@ -4,6 +4,7 @@ from pprint import pprint
 
 #200mm x 150mm
 voxSize = 5  # in millimeters
+padding = 5
 length = 200/voxSize  #Calculates the size of the X Dimension of the array.
 width = 150/voxSize   #Calculates the size of the Y dimension of the array.
 #voxels assumed to be 5x5x5 mm
@@ -14,19 +15,21 @@ popSize = 20
 def genInd():
 	fullHolder = []
 	for i in range(0, width): #for ever row
-		fullHolder.append(0) #add 2 0's at the start of the col
-		fullHolder.append(0)
+		for j in range(0, padding):
+			fullHolder.append(0) #add padding 0's at the start of the col
 		for j in range(0, length): # add actual randomized bits
 			fullHolder.append(np.random.randint(0,2))
-		fullHolder.append(0) #add 2 0's at the end 
-		fullHolder.append(0)
+		for j in range(0, padding):
+			fullHolder.append(0) #add padding 0's at the end of the col
 	teethY = width/2
 	fullHolder[(teethY+1)*length] = 1
 	fullHolder[(teethY-1)*length] = 1
 	return fullHolder
 
 def printIndividual(ind): #ind is meant to be the individual, not quite sure if this is right so may need tweaking
-	F = open("transFile.txt", w)
+	F = open("transFile.txt", "w+")
+	F.write('%d\n' %length)
+	F.write('%d\n' %width)
 	for i in range(0,width):
 		myString = ''
 		for j in range(0, length):
@@ -42,7 +45,7 @@ def fitnessEval(ind):
 creator.create("FMax", base.Fitness, weights = (1.0,) )
 creator.create("Individual", list, fitness = creator.FMax)
 toolbox = base.Toolbox()
-toolbox.register("genIndividual", genInd, creator.Individual)
+toolbox.register("genIndividual", creator.Individual, genInd)
 toolbox.register("genPop", tools.initRepeat, list, toolbox.genIndividual)
 toolbox.register("evaluate", fitnessEval)
 toolbox.register("mate", tools.cxTwoPoint)
