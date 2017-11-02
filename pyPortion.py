@@ -17,9 +17,9 @@ def genInd():
 	for i in range(0, width): #for ever row
 		for j in range(0, padding):
 			fullHolder.append(0) #add padding 0's at the start of the col
-		for j in range(0, length): # add actual randomized bits
+		for k in range(0, length): # add actual randomized bits
 			fullHolder.append(np.random.randint(0,2))
-		for j in range(0, padding):
+		for l in range(0, padding):
 			fullHolder.append(0) #add padding 0's at the end of the col
 	teethY = width/2
 	fullHolder[(teethY+1)*length] = 1
@@ -35,12 +35,12 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		for j in range(0, length):
 			myString += ind[i][j]
 		F.write(myString)
-	file.close()
+	F.close()
 
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
 	printIndividual(ind)
-	return 0
+	return 0,
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
 creator.create("Individual", list, fitness = creator.FMax)
@@ -52,5 +52,5 @@ toolbox.register("mate", tools.cxTwoPoint)
 toolbox.register("mutate", tools.mutFlipBit)
 toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 
-finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 200)
+finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3)
 print(genInd())
