@@ -9,6 +9,8 @@ voxSize = 5  # in millimeters
 padding = 4
 length = 200/voxSize  #Calculates the size of the X Dimension of the array.
 width =  150/voxSize   #Calculates the size of the Y dimension of the array.
+lp = length + 2*padding
+wp = width + 2*padding
 handleSize = 5
 teethSize = 3
 teethGap = 1
@@ -21,10 +23,17 @@ testString = [[0,0,1,1,0,0,0,0,0,0,1,1]]
 def genInd():
 	fullHolder = []
 	for i in range(0, width): #for every row
+		for k in range(0, length): # add actual randomized bits
+			fullHolder.append(np.random.randint(0,2))
+	return fullHolder
+
+def printIndividual(ind): #ind is meant to be the individual, not quite sure if this is right so may need tweaking
+	fullHolder = []
+	for i in range(0, width): #for every row
 		for j in range(0, padding):
 			fullHolder.append(0) #add padding 0's at the start of the col
 		for k in range(0, length): # add actual randomized bits
-			fullHolder.append(np.random.randint(0,2))
+			fullHolder.append(ind[0][i*length + k])
 		for l in range(0, padding):
 			fullHolder.append(0) #add padding 0's at the end of the col
 	teethY = width/2
@@ -35,17 +44,27 @@ def genInd():
 	for i in range(0,handleSize):
 		fullHolder[length+2*padding-1-i] = 1
 		fullHolder[width*(length+2*padding)-1-i] = 1
-	
-	return fullHolder
-
-def printIndividual(ind): #ind is meant to be the individual, not quite sure if this is right so may need tweaking
+	#printing section
 	F = open("transFile.txt", "w+")
+	F.write('%d\n' %lp)
+	F.write('%d\n' %wp)
+	for i in range(0,width):
+		myString = ''
+		for j in range(0, (length+padding+padding)):
+			myString += str(fullHolder[i*(length+padding+padding)+j])
+			myString += " "
+		myString += "\n"
+		F.write(myString)
+	F.close()
+
+def nonFormatPrint(ind):
+	F = open("unform.txt", "w+")
 	F.write('%d\n' %length)
 	F.write('%d\n' %width)
 	for i in range(0,width):
 		myString = ''
-		for j in range(0, (length+padding+padding)):
-			myString += str(ind[0][i*(length+padding+padding)+j])
+		for j in range(0, (length)):
+			myString += str(ind[0][i*(length)+j])
 			myString += " "
 		myString += "\n"
 		F.write(myString)
@@ -63,6 +82,7 @@ def ocxTwoPoint(ind1, ind2):
     	ind1[0][cxpoint1:cxpoint2], ind2[0][cxpoint1:cxpoint2] \
     	    = ind2[0][cxpoint1:cxpoint2], ind1[0][cxpoint1:cxpoint2]
 	return ind1, ind2
+
 def omutFlipBit(individual, indpb):
 	for i in xrange(len(individual[0])):
         	if random.random() < indpb:
@@ -87,4 +107,5 @@ toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 
 #finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 100)
 printIndividual([genInd()])
+nonFormatPrint([genInd()])
 #printIndividual(testString)
