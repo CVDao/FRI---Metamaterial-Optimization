@@ -1,6 +1,7 @@
 from deap import base, creator, tools, algorithms
 import numpy as np
 from pprint import pprint 
+import random
 
 #200mm x 150mm
 voxSize = 5  # in millimeters
@@ -14,7 +15,7 @@ popSize = 20
 #Generating the individual seems to be working correctly for now.
 def genInd():
 	fullHolder = []
-	for i in range(0, width): #for ever row
+	for i in range(0, width): #for every row
 		for j in range(0, padding):
 			fullHolder.append(0) #add padding 0's at the start of the col
 		for k in range(0, length): # add actual randomized bits
@@ -33,9 +34,27 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 	for i in range(0,width):
 		myString = ''
 		for j in range(0, length):
-			myString += ind[i][j]
+			myString += str(ind[0][i*length+j])
 		F.write(myString)
 	F.close()
+
+def ocxTwoPoint(ind1, ind2):
+	size = min(len(ind1[0]), len(ind2[0]))
+    	cxpoint1 = random.randint(1, size)
+    	cxpoint2 = random.randint(1, size - 1)
+    	if cxpoint2 >= cxpoint1:
+    	    cxpoint2 += 1
+    	else: # Swap the two cx points
+    	    cxpoint1, cxpoint2 = cxpoint2, cxpoint1
+   
+    	ind1[0][cxpoint1:cxpoint2], ind2[0][cxpoint1:cxpoint2] \
+    	    = ind2[0][cxpoint1:cxpoint2], ind1[0][cxpoint1:cxpoint2]
+	return ind1, ind2
+def omutFlipBit(individual, indpb):
+	for i in xrange(len(individual[0])):
+        	if random.random() < indpb:
+      			individual[0][i] = type(individual[0][i])(not individual[0][i])
+	return individual,
 
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
@@ -45,12 +64,12 @@ def fitnessEval(ind):
 creator.create("FMax", base.Fitness, weights = (1.0,) )
 creator.create("Individual", list, fitness = creator.FMax)
 toolbox = base.Toolbox()
-toolbox.register("genIndividual", creator.Individual, genInd)
+toolbox.register("genIndividual", tools.initRepeat, creator.Individual, genInd, n=1)
 toolbox.register("genPop", tools.initRepeat, list, toolbox.genIndividual)
 toolbox.register("evaluate", fitnessEval)
-toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutFlipBit)
+toolbox.register("mate", ocxTwoPoint)
+toolbox.register("mutate", omutFlipBit, indpb = .05)
 toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 
-finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3)
-print(genInd())
+finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 100)
+#print(genInd())
