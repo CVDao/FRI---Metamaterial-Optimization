@@ -95,7 +95,8 @@ def fitnessEval(ind):
 	print("fitness eval ran")
 	subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True);
 	F = open("output.txt", "w+")
-	F.split(",")
+	testerVal = F.split(",")
+	print(testerVal);
 
 	#valOne = 
 	#valTwo = 
