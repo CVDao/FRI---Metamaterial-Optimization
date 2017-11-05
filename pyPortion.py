@@ -54,7 +54,7 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		F.write(myString)
 	F.write('%d\n' %teethSize)
 	for i in range(0, teethSize):
-		F.write('%d %d %d %d %d\n' %(0, length-1-i, 2, 2, 2))
+		F.write('%d %d %d %d %d\n' %(0, lp-1-i, -2000, -2000, -2000))
 	F.close()
 
 def nonFormatPrint(ind):
@@ -97,18 +97,19 @@ def fitnessEval(ind):
 	tTeeth = []
 	bTeeth = []
 	for i in range(0,3):
-		inp = np.fromstring(inpMatrice[(width/2)+teethGap][i], dtype= 'float', sep=',')
+		inp = np.fromstring(inpMatrice[0][lp-1-i], dtype = 'float', sep=',')
+		#inp = np.fromstring(inpMatrice[(width/2)+teethGap][i], dtype= 'float', sep=',')
 		tTeeth.append(inp)
 		inp = np.fromstring(inpMatrice[(width/2)-teethGap][i], dtype= 'float', sep=',')
 		bTeeth.append(inp)
 	fitness = 0.0
 	for i in range(0,3):
 		#print bTeeth
-		fitness =  fitness + bTeeth[i][0]-tTeeth[i][0]
-		fitness =  fitness + bTeeth[i][1]-tTeeth[i][1]
+		fitness =  fitness + tTeeth[i][0]#bTeeth[i][0]-tTeeth[i][0]
+		fitness =  fitness + tTeeth[i][1]#bTeeth[i][1]-tTeeth[i][1]
 		#print "tteeth"
 		#print tTeeth[i][1]
-		fitness =  fitness + bTeeth[i][2]-tTeeth[i][2]
+		fitness =  fitness + tTeeth[i][2]#bTeeth[i][2]-tTeeth[i][2]
 	print "fitness"
 	print fitness
 	return fitness,
