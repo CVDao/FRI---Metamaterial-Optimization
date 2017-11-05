@@ -5,7 +5,7 @@ import random
 import subprocess
 
 #200mm x 150mm
-voxSize = 50  # in millimeters
+voxSize = 5  # in millimeters
 padding = 4
 length = 200/voxSize  #Calculates the size of the X Dimension of the array.
 width =  150/voxSize   #Calculates the size of the Y dimension of the array.
@@ -16,7 +16,7 @@ teethSize = 3
 teethGap = 1
 #voxels assumed to be 5x5x5 mm
 # a test comment
-popSize = 5
+popSize = 100
 testString = [[0,0,1,1,0,0,0,0,0,0,1,1]]
 
 #Generating the individual seems to be working correctly for now.
@@ -92,14 +92,13 @@ def omutFlipBit(individual, indpb):
 def fitnessEval(ind):
     #printIndividual(ind)
     #print("fitness eval ran")
-    #subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
-    input = np.loadtxt("test.txt", dtype='str', delimiter=';') #might want to use actual c++ output file
+    subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
+    input = np.loadtxt("output.txt", dtype='str', delimiter=';') #might want to use actual c++ output file
     #debugging
     #    print(input) 
 #    for r in range(3):
 #        for c in range(3):
 #            print(input[r][c]) debugging
-
     xDist = 0
     yDist = 0
     zDist = 0
@@ -133,7 +132,7 @@ toolbox.register("mate", ocxTwoPoint)
 toolbox.register("mutate", omutFlipBit, indpb = .05)
 toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 
-finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 1)
+finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 20)
 #printIndividual([genInd()])
 #nonFormatPrint([genInd()])
 #printIndividual(testString)
