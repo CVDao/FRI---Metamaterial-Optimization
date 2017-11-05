@@ -121,7 +121,7 @@ def fitnessEval(ind):
     totalDisplace = xDist + yDist + zDist
     return totalDisplace,
 
-creator.create("FMax", base.Fitness, weights = (1.0,) )
+creator.create("FMax", base.Fitness, weights = (-1.0,) )
 #Technically we want the fitness to be as close to 0
 creator.create("Individual", list, fitness = creator.FMax)
 toolbox = base.Toolbox()
