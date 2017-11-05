@@ -99,20 +99,31 @@ def fitnessEval(ind):
 #    for r in range(3):
 #        for c in range(3):
 #            print(input[r][c]) debugging
+
+    xDist = 0
+    yDist = 0
+    zDist = 0
+    totalDisplace = 0
+    #haven't actually tested this. Here's to hoping it doesn't crash and burn
     #get teeth positions?
     teethY = width/2
     for i in range(0, teethSize):
         #where to go from here?
-        input[(teethY+teethGap)*(length+2*padding)+i]  #teeth first set
-        input[(teethY-teethGap)*(length+2*padding)+i]
-
-    #xDist = 
-    #yDist = 
-    #zDist = 
-
-    return 0,
+        #I assume that (teethY+teethGap) indicates the top teeth?
+        t1 = input[(teethY+teethGap)*(length+2*padding)+i]  #teeth first set
+        #I assume that (teethY-teethGap) indicates the bottom teeth?
+        t2 = input[(teethY-teethGap)*(length+2*padding)+i]
+        miniList = [float(el) for el in t1.split(',')]
+        miniList2 = [float(el) for el in t2.split(',')]
+        xDist += miniList[0] + miniList2[0]
+        yDist += miniList[1] + miniList2[1]
+        zDist += miniList[2] + miniList2[2]
+    #idk why I did this, but we need something
+    totalDisplace = xDist + yDist + zDist
+    return totalDisplace,
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
+#Technically we want the fitness to be as close to 0
 creator.create("Individual", list, fitness = creator.FMax)
 toolbox = base.Toolbox()
 toolbox.register("genIndividual", tools.initRepeat, creator.Individual, genInd, n=1)
