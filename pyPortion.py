@@ -50,12 +50,11 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		myString = ''
 		for j in range(0, (length+padding+padding)):
 			myString += str(fullHolder[i*(length+padding+padding)+j])
-			myString += " "
 		myString += "\n"
 		F.write(myString)
 	F.write('%d\n' %teethSize)
 	for i in range(0, teethSize):
-		F.write('%d %d %d %d %d\n' %(0, length-1-i, 0, -2, 0))
+		F.write('%d %d %d %d %d\n' %(0, length-1-i, 2, 2, 2))
 	F.close()
 
 def nonFormatPrint(ind):
@@ -102,10 +101,10 @@ def fitnessEval(ind):
 		tTeeth.append(inp)
 		inp = np.fromstring(inpMatrice[(width/2)-teethGap][i], dtype= 'float', sep=',')
 		bTeeth.append(inp)
-	fitness = 0
+	fitness = 0.0
 	for i in range(0,3):
-		print "bteeth"
-		print bTeeth
+		#print bTeeth
+		fitness =  fitness + bTeeth[i][0]-tTeeth[i][0]
 		fitness =  fitness + bTeeth[i][1]-tTeeth[i][1]
 		#print "tteeth"
 		#print tTeeth[i][1]
