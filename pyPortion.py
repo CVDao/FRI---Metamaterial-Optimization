@@ -16,7 +16,7 @@ teethSize = 3
 teethGap = 1
 #voxels assumed to be 5x5x5 mm
 # a test comment
-popSize = 100
+popSize = 150
 testString = [[0,0,1,1,0,0,0,0,0,0,1,1]]
 
 #Generating the individual seems to be working correctly for now.
@@ -132,7 +132,7 @@ toolbox.register("mate", ocxTwoPoint)
 toolbox.register("mutate", omutFlipBit, indpb = .05)
 toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 
-finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 20)
+finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 150)
 #printIndividual([genInd()])
 #nonFormatPrint([genInd()])
 #printIndividual(testString)
