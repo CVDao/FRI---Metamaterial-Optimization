@@ -5,7 +5,7 @@ import random
 import subprocess
 
 #200mm x 150mm
-voxSize = 5  # in millimeters
+voxSize = 50  # in millimeters
 padding = 4
 length = 200/voxSize  #Calculates the size of the X Dimension of the array.
 width =  150/voxSize   #Calculates the size of the Y dimension of the array.
@@ -16,7 +16,7 @@ teethSize = 3
 teethGap = 1
 #voxels assumed to be 5x5x5 mm
 # a test comment
-popSize = 20
+popSize = 5
 testString = [[0,0,1,1,0,0,0,0,0,0,1,1]]
 
 #Generating the individual seems to be working correctly for now.
@@ -91,15 +91,25 @@ def omutFlipBit(individual, indpb):
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
     #printIndividual(ind)
-    print("fitness eval ran")
-    subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
+    #print("fitness eval ran")
+    #subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
     input = np.loadtxt("test.txt", dtype='str', delimiter=';') #might want to use actual c++ output file
-    print(input) #debugging
+    #debugging
+    #    print(input) 
+#    for r in range(3):
+#        for c in range(3):
+#            print(input[r][c]) debugging
+    #get teeth positions?
+    teethY = width/2
+    for i in range(0, teethSize):
+        #where to go from here?
+        input[(teethY+teethGap)*(length+2*padding)+i]  #teeth first set
+        input[(teethY-teethGap)*(length+2*padding)+i]
 
-#   output_list = F.read().rstrip().split(',')
-#   print output_list #debugging
-    #valOne = 
-    #valTwo = 
+    #xDist = 
+    #yDist = 
+    #zDist = 
+
     return 0,
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
