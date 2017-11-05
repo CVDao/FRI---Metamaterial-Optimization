@@ -12,9 +12,10 @@ width =  150/voxSize   #Calculates the size of the Y dimension of the array.
 lp = length + 2*padding
 wp = width + 2*padding
 handleSize = 5
-teethSize = 3
+teethSize = 4
 teethGap = 1
-popSize = 150
+popSize = 5
+genSize = 1
 testString = [[0,0,1,1,0,0,0,0,0,0,1,1]]
 
 def genInd():
@@ -52,6 +53,9 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 			myString += " "
 		myString += "\n"
 		F.write(myString)
+	F.write('%d\n' %teethSize)
+	for i in range(0, teethSize):
+		F.write('%d %d %d %d %d\n' %(0, length-1-i, 0, -2, 0))
 	F.close()
 
 def nonFormatPrint(ind):
@@ -88,30 +92,29 @@ def omutFlipBit(individual, indpb):
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
 	printIndividual(ind)
-	print("fitness eval ran")
 	subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
-	#input = np.loadtxt("output.txt", dtype='str', delimiter=';') #might want to use actual c++ output file
-	#xDist = 0
-	#yDist = 0
-	#zDist = 0
-	#totalDisplace = 0
-	#
-	#teethY = width/2
-	#for i in range(0, teethSize):
-	#	#where to go from here?
-	#	#I assume that (teethY+teethGap) indicates the top teeth?
-	#	t1 = input[(teethY+teethGap)*(length+2*padding)+i]  #teeth first set
-	#	#I assume that (teethY-teethGap) indicates the bottom teeth?
-	#	t2 = input[(teethY-teethGap)*(length+2*padding)+i]
-	#	miniList = [float(el) for el in t1.split(',')]
-	#	miniList2 = [float(el) for el in t2.split(',')]
-	#	xDist += miniList[0] + miniList2[0]
-	#	yDist += miniList[1] + miniList2[1]
-	#	zDist += miniList[2] + miniList2[2]
-	#totalDisplace = xDist + yDist + zDist
-	return 0,
+	inpMatrice  = np.loadtxt("output.txt", dtype='str', delimiter=';') #inp[row][voxel] then requires extra parsing to parse string
 
-creator.create("FMax", base.Fitness, weights = (-1.0,) )
+	tTeeth = []
+	bTeeth = []
+	for i in range(0,3):
+		inp = np.fromstring(inpMatrice[(width/2)+teethGap][i], dtype= 'float', sep=',')
+		tTeeth.append(inp)
+		inp = np.fromstring(inpMatrice[(width/2)-teethGap][i], dtype= 'float', sep=',')
+		bTeeth.append(inp)
+	fitness = 0
+	for i in range(0,3):
+		print "bteeth"
+		print bTeeth
+		fitness =  fitness + bTeeth[i][1]-tTeeth[i][1]
+		#print "tteeth"
+		#print tTeeth[i][1]
+		fitness =  fitness + bTeeth[i][2]-tTeeth[i][2]
+	print "fitness"
+	print fitness
+	return fitness,
+
+creator.create("FMax", base.Fitness, weights = (1.0,) )
 creator.create("Individual", list, fitness = creator.FMax)
 toolbox = base.Toolbox()
 toolbox.register("genIndividual", tools.initRepeat, creator.Individual, genInd, n=1) #n should always be set to one.
@@ -121,7 +124,7 @@ toolbox.register("mate", ocxTwoPoint)
 toolbox.register("mutate", omutFlipBit, indpb = .05)
 toolbox.register("select", tools.selTournament, tournsize = popSize/5)
 
-finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, 150)
+finalPop = algorithms.eaSimple(toolbox.genPop(n=popSize), toolbox, 0.2, 0.3, genSize)
 #printIndividual([genInd()])
 #nonFormatPrint([genInd()])
 #printIndividual(testString)
