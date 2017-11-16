@@ -36,12 +36,12 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 			fullHolder.append(0) #add padding 0's at the end of the col
 	teethY = width/2
 	for i in range(0, teethSize):
-		 fullHolder[(teethY+teethGap)*(length+2*padding)+i] = 1 #teeth first set
-		 fullHolder[(teethY-teethGap)*(length+2*padding)+i] = 1
+		 fullHolder[(teethY+teethGap)*(length+2*padding)-i] = 1 #teeth first set
+		 fullHolder[(teethY-teethGap)*(length+2*padding)-i] = 1
 
 	for i in range(0,handleSize):
-		fullHolder[length+2*padding-1-i] = 1
-		fullHolder[width*(length+2*padding)-1-i] = 1
+		fullHolder[i] = 1
+		fullHolder[(width-1)*(length+2*padding)+i] = 1
 	#printing section
 	F = open("transFile.txt", "w+")
 	F.write('%d\n' %lp)
@@ -54,7 +54,7 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		F.write(myString)
 	F.write('%d\n' %teethSize)
 	for i in range(0, teethSize):
-		F.write('%d %d %d %d %d\n' %(0, lp-1-i, -2000, -2000, -2000))
+		F.write('%d %d %d %d %d\n' %(wp-1, i, -2000, -2000, -2000))
 	F.close()
 
 def nonFormatPrint(ind):
@@ -110,8 +110,8 @@ def fitnessEval(ind):
 		#print "tteeth"
 		#print tTeeth[i][1]
 		fitness =  fitness + tTeeth[i][2]#bTeeth[i][2]-tTeeth[i][2]
-	print "fitness"
-	print fitness
+	print "voxels"
+	print (inpMatrice)
 	return fitness,
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
