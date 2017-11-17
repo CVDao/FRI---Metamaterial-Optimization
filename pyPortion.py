@@ -54,7 +54,7 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		F.write(myString)
 	F.write('%d\n' %teethSize)
 	for i in range(0, teethSize):
-		F.write('%d %d %d %d %d\n' %(wp-1, i, -2000, -2000, -2000))
+		F.write('%d %d %d %d %d\n' %(wp-1, i, 20, 20, 20))
 	F.close()
 
 def nonFormatPrint(ind):
