@@ -7,10 +7,10 @@ import subprocess
 #200mm x 150mm
 voxSize = 5  # in millimeters
 padding = 4
-length = 200/voxSize  #Calculates the size of the X Dimension of the array.
-width =  150/voxSize   #Calculates the size of the Y dimension of the array.
+length = 14#200/voxSize  #Calculates the size of the X Dimension of the array.
+width =  10#150/voxSize   #Calculates the size of the Y dimension of the array.
 lp = length + 2*padding
-wp = width + 2*padding
+wp = width
 handleSize = 5
 teethSize = 4
 teethGap = 1
