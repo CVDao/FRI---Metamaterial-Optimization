@@ -44,15 +44,15 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		fullHolder[(width-1)*(length+2*padding)+i] = 1
 	#printing section
 	F = open("transFile.txt", "w+")
-	F.write('%d\n' %lp)
 	F.write('%d\n' %wp)
+	F.write('%d\n' %lp)
+	F.write('%d\n' %handleSize)
 	for i in range(0,width):
 		myString = ''
 		for j in range(0, (length+padding+padding)):
 			myString += str(fullHolder[i*(length+padding+padding)+j])
 		myString += "\n"
 		F.write(myString)
-	F.write('%d\n' %teethSize)
 	for i in range(0, teethSize):
 		F.write('%d %d %d %d %d\n' %(wp-1, i, 20, 20, 20))
 	F.close()
