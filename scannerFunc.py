@@ -1,12 +1,11 @@
 import numpy as np
+from pprint import pprint
 
 inpMatrice = np.loadtxt("output.txt", dtype= 'str', delimiter= ';')
-print inpMatrice
 holder = []
-for i in range(len(inpMatrice)):
-	inp = np.fromstring(inpMatrice[i], dtype = 'float', sep=',')
+for i in len(range(inpMatrice[0])):
+	inp = np.fromstring(inpMatrice[0][i], dtype = 'float', sep=',')
 	holder.append(inp)
-
 maxNum = 0.0
 minNum = 0.0
 

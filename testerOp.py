@@ -42,6 +42,12 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 	for i in range(0,handleSize):
 		fullHolder[i] = 1
 		fullHolder[(width-1)*(length+2*padding)+i] = 1
+
+	myQueue = [(wp-1,0)]
+
+	while( len(myQueue) != 0):
+		myTouple = myQueue.pop()
+		if(inZone(fullHolder[myTouple
 	#printing section
 	F = open("transFile.txt", "w+")
 	F.write('%d\n' %wp)
@@ -90,13 +96,10 @@ def omutFlipBit(individual, indpb):
 
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
-	oneCounter = 0
-	for i in range(len(ind[0])):
-		if (ind[0][i] == 1):
-			oneCounter = oneCounter + 1
 	printIndividual(ind)
 	subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
-	inpMatrice = np.loadtxt("output.txt", dtype='str', delimiter=';') #inp[row][voxel] then requires extra parsing to parse string
+	inpMatrice  = np.loadtxt("output.txt", dtype='str', delimiter=';') #inp[row][voxel] then requires extra parsing to parse string
+
 	tTeeth = []
 	bTeeth = []
 	for i in range(0,3):
@@ -113,6 +116,8 @@ def fitnessEval(ind):
 		#print "tteeth"
 		#print tTeeth[i][1]
 		fitness =  fitness + tTeeth[i][2]#bTeeth[i][2]-tTeeth[i][2]
+	print "voxels"
+	print (inpMatrice)
 	return fitness,
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
