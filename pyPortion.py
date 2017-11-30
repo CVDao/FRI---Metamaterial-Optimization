@@ -88,12 +88,21 @@ def omutFlipBit(individual, indpb):
 			individual[0][i] = type(individual[0][i])(not individual[0][i])
 	return individual,
 
+def myMapper(ind, inpMatrice):
+	holder = []
+	print inpMatrice
+	for i in range(len(inpMatrice)):
+		for j in range(len(inpMatrice[0])):
+				
+	return 0
+
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
 	oneCounter = 0
 	for i in range(len(ind[0])):
 		if (ind[0][i] == 1):
 			oneCounter = oneCounter + 1
+
 	printIndividual(ind)
 	subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
 	inpMatrice = np.loadtxt("output.txt", dtype='str', delimiter=';') #inp[row][voxel] then requires extra parsing to parse string
