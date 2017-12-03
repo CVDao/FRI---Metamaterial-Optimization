@@ -50,10 +50,20 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		Connecteds.append(operator)
 		if(operator[0]-1 >= 0):
 			if(fullHolder[(operator[0]-1)*lp + operator[1]] == 1):
-				myQueue.append((operator[0]-1, operator[1]))
+				if ((operator[0]-1, operator[1]) not in Connecteds):
+					myQueue.append((operator[0]-1, operator[1]))
 		if(operator[1]+1 < lp):
 			if(fullHolder[(operator[0])*lp + operator[1]+1] == 1):
-				myQueue.append((operator[0], operator[1] + 1))
+				if ((operator[0], operator[1]+1) not in Connecteds):
+					myQueue.append((operator[0], operator[1] + 1))
+		if(operator[0]+1 < width):
+			if(fullHolder[(operator[0]+1)*lp + operator[1]] == 1):
+				if ((operator[0]+1, operator[1]) not in Connecteds):
+					myQueue.append((operator[0]+1, operator[1]))
+		if(operator[1]-1 >= 0):
+			if(fullHolder[(operator[0])*lp + operator[1]-1] == 1):
+				if ((operator[0], operator[1]-1) not in Connecteds):
+					myQueue.append((operator[0], operator[1] - 1))
 
 		if(operator[0]-1 >= 0 & operator[1] + 1 <lp):
 			if(fullHolder[(operator[0]-1)*lp + operator[1] +1] == 1):
@@ -86,7 +96,7 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		myString += "\n"
 		F.write(myString)
 	for i in range(0, teethSize):
-		F.write('%d %d %d %d %d\n' %(width-1, i, 20, 20, 20))
+		F.write('%d %d %d %d %d\n' %(0, i, 20, 20, 20))
 	F.close()
 
 def nonFormatPrint(ind):
@@ -114,11 +124,15 @@ def ocxTwoPoint(ind1, ind2):
 		= ind2[0][cxpoint1:cxpoint2], ind1[0][cxpoint1:cxpoint2]
 	return ind1, ind2
 
-def omutFlipBit(individual, indpb):
-	for i in xrange(len(individual[0])):
+def omutFlipBit(ind, indpb):
+	for i in xrange(len(ind[0])):
 		if random.random() < indpb:
-			individual[0][i] = type(individual[0][i])(not individual[0][i])
-	return individual,
+			for j in range (2):
+				if(j*lp+i < len(ind[0])):
+					ind[0][j*lp+i] = type(ind[0][j*lp+i])(not ind[0][j*lp+i])
+				if(i-j*lp >= 0):
+					ind[0][i-j*lp] = type(ind[0][i-j*lp])(not ind[0][i-j*lp])
+	return ind,
 
 def myMapper(ind, inpMatrice):
 	holder = [] # holds all total time step matrices
@@ -155,7 +169,7 @@ def fitnessEval(ind):
 	inpMatrice = np.loadtxt("output.txt", dtype='str', delimiter=';') #inp[row][voxel] then requires extra parsing to parse string
 	holder = myMapper(ind, inpMatrice)
 
-	minD = 1000
+	oD = holder[0][teethY+teethGap][lp-1][1] # original distance
 	maxD = 0
 	minUT = 1000
 	maxUT = 0
@@ -166,8 +180,8 @@ def fitnessEval(ind):
 	#		minBT = val
 		if(val > maxD):
 			maxD = val
-	print maxD
-	return maxD,
+	print maxD - oD
+	return maxD- oD,
 
 creator.create("FMax", base.Fitness, weights = (1.0,) )
 creator.create("Individual", list, fitness = creator.FMax)
