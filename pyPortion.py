@@ -7,10 +7,9 @@ import subprocess
 #200mm x 150mm
 voxSize = 5  # in millimeters
 padding = 4
-length = 14#200/voxSize  #Calculates the size of the X Dimension of the array.
-width =  10#150/voxSize   #Calculates the size of the Y dimension of the array.
+width =  10#150/voxSize   #Calculates the size of the Y dimension of the array. I.e. The Rows
+length = 14#200/voxSize  #Calculates the size of the X Dimension of the array. I.e. the Columns
 lp = length + 2*padding
-wp = width
 handleSize = 5
 teethSize = 4
 teethGap = 1
@@ -42,9 +41,14 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 	for i in range(0,handleSize):
 		fullHolder[i] = 1
 		fullHolder[(width-1)*(length+2*padding)+i] = 1
+
+	#post process section
+	myQueue = [(0,0)]
+	while(len(myQueue) != 0):
+		operator = myQueue.pop()
 	#printing section
 	F = open("transFile.txt", "w+")
-	F.write('%d\n' %wp)
+	F.write('%d\n' %width)
 	F.write('%d\n' %lp)
 	F.write('%d\n' %handleSize)
 	for i in range(0,width):
@@ -54,7 +58,7 @@ def printIndividual(ind): #ind is meant to be the individual, not quite sure if 
 		myString += "\n"
 		F.write(myString)
 	for i in range(0, teethSize):
-		F.write('%d %d %d %d %d\n' %(wp-1, i, 20, 20, 20))
+		F.write('%d %d %d %d %d\n' %(width-1, i, 20, 20, 20))
 	F.close()
 
 def nonFormatPrint(ind):
@@ -89,25 +93,34 @@ def omutFlipBit(individual, indpb):
 	return individual,
 
 def myMapper(ind, inpMatrice):
-	holder = []
-	print inpMatrice
-	for i in range(len(inpMatrice)):
-		for j in range(len(inpMatrice[0])):
-				
-	return 0
+	holder = [] # holds all total time step matrices
+	onesCounter = 0
+	for i in range(1000):
+		tempMatrice = [] # holds the single timestep matrix
+		for j in range(width): # row
+			tempRow = []
+			for k in range(length): # column order
+				if(ind[j*length + j] == 1):
+					tempInp = np.fromstring(inpMatrice[0][onesCounter], dtype = 'float', sep=',')
+					onesCounter = onesCounter + 1
+					tempRow.append(tempInp)
+				else:
+					tempRow.append([0,0,0])
+			tempMatrice.append(tempRow)
+		holder.append(tempMatrice)
+	return holder
 
 #run printIndividual, then call the other guys code, then eval fitness
 def fitnessEval(ind):
-	oneCounter = 0
-	for i in range(len(ind[0])):
-		if (ind[0][i] == 1):
-			oneCounter = oneCounter + 1
-
 	printIndividual(ind)
 	subprocess.call("./VoxCad_Test < transFile.txt > output.txt", shell = True); 
 	inpMatrice = np.loadtxt("output.txt", dtype='str', delimiter=';') #inp[row][voxel] then requires extra parsing to parse string
 	tTeeth = []
 	bTeeth = []
+	#print inpMatrice - array of arrays
+	#print inpMatrice[0] - array of triples
+	#print inpMatrice[0][0] - one triple stringa
+	print ind
 	for i in range(0,3):
 		inp = np.fromstring(inpMatrice[0][lp-1-i], dtype = 'float', sep=',')
 		#inp = np.fromstring(inpMatrice[(width/2)+teethGap][i], dtype= 'float', sep=',')
